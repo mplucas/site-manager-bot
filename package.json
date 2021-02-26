@@ -1,0 +1,19 @@
+{
+  "name": "site-manager-bot",
+  "version": "1.0.0",
+  "description": "Bot to create sites and posts automatically",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mplucas/site-manager-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mplucas/site-manager-bot/issues"
+  },
+  "homepage": "https://github.com/mplucas/site-manager-bot#readme"
+}
