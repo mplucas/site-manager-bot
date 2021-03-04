@@ -7,6 +7,7 @@ class App {
 
         const userInput = new UserInput()
         const content = await userInput.get()
+        content.maximumSentences = 7
 
         const textRobot = new TextRobot(content)
         await textRobot.run()
