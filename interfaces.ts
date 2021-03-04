@@ -4,6 +4,7 @@ export interface Content {
     sourceContentOriginal: string;
     sourceContentSanitized: string;
     sentences: Sentence[];
+    maximumSentences: number;
 }
 
 export interface Sentence {
