@@ -5,8 +5,8 @@ class App {
 
     public async init() {
 
-        const userInputGetter = new UserInput()
-        const content = await userInputGetter.get()
+        const userInput = new UserInput()
+        const content = await userInput.get()
 
         const textRobot = new TextRobot(content)
         await textRobot.run()
