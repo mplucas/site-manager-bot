@@ -1,4 +1,5 @@
 import { TextRobot } from './robots/TextRobot'
+import { WikipediaRobot } from './robots/WikipediaRobot'
 import { UserInput } from './utils/UserInput'
 
 class App {
@@ -8,6 +9,9 @@ class App {
         const userInput = new UserInput()
         const content = await userInput.get()
         content.maximumSentences = 7
+
+        const wikipediaRobot = new WikipediaRobot(content)
+        await wikipediaRobot.run()
 
         const textRobot = new TextRobot(content)
         await textRobot.run()
