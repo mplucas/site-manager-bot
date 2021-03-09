@@ -24,7 +24,7 @@ export class UserInput {
 
     private async askAndReturnSearchTerm() {
 
-        console.log('Type a Wikipedia search term: ')
+        console.log('Informe um termo de pesquisa na Wikipédia: ')
 
         const it = this.rl[Symbol.asyncIterator]()
         let searchTerm: string = (await it.next()).value
@@ -35,9 +35,9 @@ export class UserInput {
 
     private async askAndReturnPrefix() {
 
-        const prefixes = ['Who is', 'What is', 'The history of']
+        const prefixes = ['Quem é', 'O que é', 'A história de']
 
-        console.log('\nSelect one of:')
+        console.log('\nSelecione um:')
 
         prefixes.map((prefix, index) => {
 

@@ -26,7 +26,7 @@ export class TextRobot {
 
     public async run() {
 
-        const simulate = true;
+        const simulate = false;
 
         if (simulate) {
             this.simulateAlgorithmiaCallBeacon()
@@ -45,7 +45,7 @@ export class TextRobot {
 
         const algorithimiaAuthenticate = algorithmia(algorithmiaAPI.key)
         const wikipediaAlgorithim = algorithimiaAuthenticate.algo('web/WikipediaParser/0.1.2')
-        const wikipediaResponse = await wikipediaAlgorithim.pipe(this.content.searchTerm)
+        const wikipediaResponse = await wikipediaAlgorithim.pipe({articleName: this.content.searchTerm, lang: 'pt'})
         const wikipediaContent = wikipediaResponse.get()
 
         this.content.sourceContentOriginal = wikipediaContent.content
@@ -113,7 +113,8 @@ export class TextRobot {
                 text: sentence,
                 features: {
                     keywords: {}
-                }
+                },
+                language: 'pt'
             }).then(response => {
 
                 const keywords = response.result.keywords.map(keyword => {

@@ -12,7 +12,7 @@ export const api = {
 
 ## Watson Natural Language Understanding
 
-File: `watson-nlu.json`
+File: `watson-nlu.ts`
 
 ```
 export const api = {
