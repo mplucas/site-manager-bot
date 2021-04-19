@@ -5,15 +5,22 @@ import algorithmia from "algorithmia";
 import sentenceBoundaryDetection from "sbd";
 import NaturalLanguageUnderstandingV1 from 'ibm-watson/natural-language-understanding/v1.js';
 import { IamAuthenticator } from 'ibm-watson/auth'
+import { StateRobot } from "./StateRobot";
 
 export class TextRobot {
 
-    private nlu: NaturalLanguageUnderstandingV1;
+    private nlu: NaturalLanguageUnderstandingV1
     private content: Content
+    private stateRobot = new StateRobot()
 
-    constructor(content: Content) {
+    constructor(content?: Content) {
 
-        this.content = content
+        if (content) {
+            this.content = content
+        } else {
+            this.content = this.stateRobot.load()
+        }
+
         this.nlu = new NaturalLanguageUnderstandingV1({
             authenticator: new IamAuthenticator({
                 apikey: watsonAPI.apikey,
@@ -35,13 +42,14 @@ export class TextRobot {
         this.limitMaximumSentences()
         await this.fetchKeywordsOfAllSentences()
 
+        this.stateRobot.save(this.content)
     }
 
     private async fetchContentFromWikipedia() {
 
         const algorithimiaAuthenticate = algorithmia(algorithmiaAPI.key)
         const wikipediaAlgorithim = algorithimiaAuthenticate.algo('web/WikipediaParser/0.1.2')
-        const wikipediaResponse = await wikipediaAlgorithim.pipe({articleName: this.content.searchTerm})
+        const wikipediaResponse = await wikipediaAlgorithim.pipe({ articleName: this.content.searchTerm })
         const wikipediaContent = wikipediaResponse.get()
 
         this.content.sourceContentOriginal = wikipediaContent.content

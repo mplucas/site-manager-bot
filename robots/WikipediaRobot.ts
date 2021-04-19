@@ -2,26 +2,34 @@ import { Content } from "../interfaces";
 import superAgent from 'superagent';
 import unicode from 'unidecode';
 import { chooseOneIn } from "../utils/Functions";
+import { StateRobot } from "./StateRobot";
 
-export class WikipediaRobot{
+export class WikipediaRobot {
 
-    private images:string[] = [];
-    private ctn:string = '';
-    private title:string = '';
-    private summary:string =''
-    private pageid:string = '';
-    private url:string = '';
-    private links:string[] = [];
-    private references:string[] = [];
-    
-    private content:Content;
+    private images: string[] = [];
+    private ctn: string = '';
+    private title: string = '';
+    private summary: string = ''
+    private pageid: string = '';
+    private url: string = '';
+    private links: string[] = [];
+    private references: string[] = [];
+    private stateRobot = new StateRobot()
 
-    constructor(content:Content){
-        this.content = content;
+    private content: Content;
+
+    constructor(content?: Content) {
+
+        if (content) {
+            this.content = content
+        } else {
+            this.content = this.stateRobot.load()
+        }
+
     }
 
-    public async run(){
-        
+    public async run() {
+
         console.log('Fetching from Wikipedia...')
         await this.fetchFromWikipedia()
         console.log('Searching content...')
@@ -30,20 +38,20 @@ export class WikipediaRobot{
         const algorithmiaLikeObject = this.buildAlgorithmiaLikeObject()
 
         this.content.sourceContentOriginal = algorithmiaLikeObject.content
-
+        this.stateRobot.save(this.content);
     }
 
-    private async fetchFromWikipedia(){
+    private async fetchFromWikipedia() {
 
         const res = await superAgent.get('https://en.wikipedia.org/w/api.php').query({
-            'action':'opensearch',
-            'search':''+this.content.searchTerm,
-            'limit':5,
-            'namespace':0,
-            'format':"json"
+            'action': 'opensearch',
+            'search': '' + this.content.searchTerm,
+            'limit': 5,
+            'namespace': 0,
+            'format': "json"
         })
 
-        if(res.body[1].length == 0){
+        if (res.body[1].length == 0) {
             console.log('Your search term don\'t return any result')
             console.log('Tip: Search your therm in English or pre-search valid Words')
             console.log('Exiting Program...')
@@ -58,7 +66,7 @@ export class WikipediaRobot{
 
         let index = await chooseOneIn(sugestions)
 
-        if(index == -1){
+        if (index == -1) {
             console.log('You don\'t selected any key')
             console.log('Exiting Program...')
             process.exit()
@@ -70,16 +78,16 @@ export class WikipediaRobot{
 
     }
 
-    private async getContent(){
+    private async getContent() {
 
         const ret = await superAgent.get('https://en.wikipedia.org/w/api.php').query({
-            'action':'query',
+            'action': 'query',
             'prop': 'extracts|images|links|info|extlinks',
             'redirects': 1,
-            'exsectionformat':'wiki',
-            'explaintext':true,
-            'titles':this.title,
-            'format':"json"
+            'exsectionformat': 'wiki',
+            'explaintext': true,
+            'titles': this.title,
+            'format': "json"
         })
 
         let value
@@ -88,23 +96,23 @@ export class WikipediaRobot{
             value = e;
         })
 
-        try{
+        try {
 
             value.links.forEach(e => {
                 this.links.push(e.title)
             })
 
-        }catch(Ex){
+        } catch (Ex) {
             console.log('----------------------------')
             console.log('Any Links in this search')
             console.log('----------------------------')
         }
 
-        try{
+        try {
             value.extlinks.forEach(e => {
                 this.references.push(e['*'])
             })
-        }catch(Ex){
+        } catch (Ex) {
             console.log('----------------------------')
             console.log('Any Reference in this search')
             console.log('----------------------------')
@@ -112,51 +120,51 @@ export class WikipediaRobot{
 
         this.pageid = value.pageid;
         this.ctn = value.extract;
-        this.summary =  value.extract.split('\n\n\n')[0]
+        this.summary = value.extract.split('\n\n\n')[0]
 
         console.log("Fetching Images...")
         for (let i = 0; i < value.images.length; i++) {
             await this.getURLImage(value.images[i].title);
         }
-        
+
     }
 
-    private async getURLImage(title: string){
-        
+    private async getURLImage(title: string) {
+
         const ret = await superAgent.get('https://en.wikipedia.org/w/api.php').query({
-            'action':'query',
+            'action': 'query',
             'prop': 'imageinfo',
-            'titles':title,
-            'format':"json",
-            'iiprop':'url'
+            'titles': title,
+            'format': "json",
+            'iiprop': 'url'
         })
 
         let values = []
         let pages = new Map(Object.entries(ret.body.query.pages));
-        pages.forEach((page:any) => {
+        pages.forEach((page: any) => {
             page.imageinfo.forEach(info => {
-              values.push(info.url)
+                values.push(info.url)
             })
         })
 
         values.forEach(e => {
-          this.images.push(e);
+            this.images.push(e);
         })
     }
 
-    private buildAlgorithmiaLikeObject(){
-        
+    private buildAlgorithmiaLikeObject() {
+
         return {
             content: this.ctn,
-            images:  this.images,
+            images: this.images,
             links: this.links,
-            pageid:this.pageid,
-            references:this.references,
+            pageid: this.pageid,
+            references: this.references,
             summary: this.summary,
             title: this.title,
             url: this.url
         }
-        
+
     }
 
 }

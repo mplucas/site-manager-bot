@@ -1,5 +1,6 @@
 import readline from 'readline'
 import { Content } from '../interfaces'
+import { StateRobot } from '../robots/StateRobot'
 import { chooseOneIn } from './Functions'
 
 export class UserInput {
@@ -10,6 +11,10 @@ export class UserInput {
 
         content.searchTerm = await this.askAndReturnSearchTerm()
         content.prefix = await this.askAndReturnPrefix()
+        content.maximumSentences = 7
+
+        const stateRobot = new StateRobot()
+        stateRobot.save(content)
 
         return content
     }

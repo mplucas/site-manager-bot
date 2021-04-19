@@ -1,3 +1,4 @@
+import { StateRobot } from './robots/StateRobot'
 import { TextRobot } from './robots/TextRobot'
 import { WikipediaRobot } from './robots/WikipediaRobot'
 import { UserInput } from './utils/UserInput'
@@ -7,16 +8,17 @@ class App {
     public async init() {
 
         const userInput = new UserInput()
-        const content = await userInput.get()
-        content.maximumSentences = 7
+        await userInput.get()
 
-        const wikipediaRobot = new WikipediaRobot(content)
+
+        const wikipediaRobot = new WikipediaRobot()
         await wikipediaRobot.run()
 
-        const textRobot = new TextRobot(content)
+        const textRobot = new TextRobot()
         await textRobot.run()
 
-        console.log(content)
+        const content = (new StateRobot()).load()
+        console.dir(content, { depth: null })
 
     }
 
