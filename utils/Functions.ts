@@ -7,7 +7,7 @@ export async function chooseOneIn(selectList:string[]){
         output: process.stdout
     })
     
-    console.log('\nSelecione um:')
+    console.log('\nSelect one:')
 
     selectList.map((item, index) => {
 
