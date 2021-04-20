@@ -11,4 +11,5 @@ export interface Sentence {
     text: string;
     keywords: string[];
     images: string[];
+    googleSearchQuery: string;
 }

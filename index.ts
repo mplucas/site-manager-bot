@@ -1,3 +1,4 @@
+import { ImageRobot } from './robots/ImageRobot'
 import { StateRobot } from './robots/StateRobot'
 import { TextRobot } from './robots/TextRobot'
 import { WikipediaRobot } from './robots/WikipediaRobot'
@@ -16,6 +17,9 @@ class App {
 
         const textRobot = new TextRobot()
         await textRobot.run()
+
+        const imageRobot = new ImageRobot()
+        await imageRobot.run()
 
         const content = (new StateRobot()).load()
         console.dir(content, { depth: null })

@@ -1,6 +1,6 @@
 import { Content } from "../interfaces";
-import superAgent from 'superagent';
-import unicode from 'unidecode';
+import superAgent from "superagent";
+import unicode from "unidecode";
 import { chooseOneIn } from "../utils/Functions";
 import { StateRobot } from "./StateRobot";
 

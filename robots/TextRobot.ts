@@ -91,7 +91,8 @@ export class TextRobot {
             this.content.sentences.push({
                 text: sentence,
                 keywords: [],
-                images: []
+                images: [],
+                googleSearchQuery: ''
             })
         })
 
