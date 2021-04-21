@@ -2,6 +2,7 @@ import { Content, Sentence } from "../interfaces";
 import { StateRobot } from "./StateRobot";
 const google = require('googleapis').google
 const customSearch = google.customsearch('v1')
+import imageDownloader from 'image-downloader';
 
 import { api } from "../credentials/google-search"
 
@@ -34,6 +35,8 @@ export class ImageRobot {
 
         this.stateRobot.save(this.content)
 
+        await this.downloadAllImages()
+
     }
 
     private async fetchGoogleAndReturnImageLinks(query: string) {
@@ -56,6 +59,47 @@ export class ImageRobot {
         }
 
         return []
+
+    }
+
+    private async downloadAllImages() {
+
+        for (let i = 0; i < this.content.sentences.length; i++) {
+
+            const images = this.content.sentences[i].images
+
+            for (let j = 0; j < images.length; j++) {
+
+                const imageURL = images[j]
+
+                try {
+
+                    await this.downloadAndSaveImage(imageURL, `${i}-original.png`)
+                    console.log(`> ${i} ${j} Image downloaded.`)
+
+                } catch {
+                    console.log(`> ${i} ${j} Error in image download.`)
+                }
+
+            }
+
+        }
+
+    }
+
+    private downloadedURLs: string[] = []
+    private async downloadAndSaveImage(url: string, fileName: string) {
+
+        if (this.downloadedURLs.includes(url)) {
+            throw new Error('Image already downloaded.')
+        }
+
+        await imageDownloader.image({
+            url: url,
+            dest: `./content/${fileName}`
+        })
+
+        this.downloadedURLs.push(url)
 
     }
 
