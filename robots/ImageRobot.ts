@@ -8,7 +8,7 @@ const rootPath = path.resolve(__dirname, '..')
 const fromRoot = (relPath: string) => path.resolve(rootPath, relPath)
 const gm = require('gm').subClass({ imageMagick: true })
 
-import { api } from "../credentials/google-search"
+import { api as googleSearchAPI } from "../credentials/google-search"
 
 export class ImageRobot {
 
@@ -48,8 +48,8 @@ export class ImageRobot {
     private async fetchGoogleAndReturnImageLinks(query: string) {
 
         const response = await customSearch.cse.list({
-            auth: api.apiKey,
-            cx: api.searchEngineId,
+            auth: googleSearchAPI.apiKey,
+            cx: googleSearchAPI.searchEngineId,
             q: query,
             searchType: 'image',
             num: 2

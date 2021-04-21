@@ -24,3 +24,14 @@ export const api = {
     "url": "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/d9022398-5f2b-4e60-aefd-277ae158fed3"
 }
 ```
+
+## Google Search credentials
+
+File: `google-search.ts`
+
+```
+export const api = {
+    "apikey": "1c4FGjmP1GFsH1kzt3rNB8sXOKEhwgwMLnHwqT6-OlJM",
+    "searchEngineId": ""
+}
+```
