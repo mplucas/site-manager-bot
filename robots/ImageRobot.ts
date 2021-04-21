@@ -40,9 +40,14 @@ export class ImageRobot {
         this.stateRobot.save(this.content)
 
         await this.downloadAllImages()
+
+        if (this.successfulDownloadedImageIndexes.length == 0) {
+            throw new Error('No images downloaded')
+        }
+
         await this.convertAllImages()
-        // await this.createAllSentenceImages()
-        // await this.createYouTubeThumbnail()
+        await this.createAllSentenceImages()
+        await this.createYouTubeThumbnail()
 
     }
 
@@ -221,7 +226,7 @@ export class ImageRobot {
     private async createYouTubeThumbnail() {
         return new Promise<void>((resolve, reject) => {
             gm()
-                .in(fromRoot(`./content/-${this.successfulDownloadedImageIndexes[0]}converted.png`))
+                .in(fromRoot(`./content/${this.successfulDownloadedImageIndexes[0]}-converted.png`))
                 .write(fromRoot('./content/youtube-thumbnail.jpg'), (error) => {
                     if (error) {
                         return reject(error)
