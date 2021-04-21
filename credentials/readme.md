@@ -31,7 +31,7 @@ File: `google-search.ts`
 
 ```
 export const api = {
-    "apikey": "1c4FGjmP1GFsH1kzt3rNB8sXOKEhwgwMLnHwqT6-OlJM",
-    "searchEngineId": ""
+    "apiKey": "AIzaSyAxFXRpPS3_y-SFH2NgC6V14Xnsxq9Ei-k",
+    "searchEngineId": "447c28d60d045149b"
 }
 ```

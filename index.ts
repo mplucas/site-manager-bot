@@ -8,15 +8,15 @@ class App {
 
     public async init() {
 
-        const userInput = new UserInput()
-        await userInput.get()
+        // const userInput = new UserInput()
+        // await userInput.get()
 
 
-        const wikipediaRobot = new WikipediaRobot()
-        await wikipediaRobot.run()
+        // const wikipediaRobot = new WikipediaRobot()
+        // await wikipediaRobot.run()
 
-        const textRobot = new TextRobot()
-        await textRobot.run()
+        // const textRobot = new TextRobot()
+        // await textRobot.run()
 
         const imageRobot = new ImageRobot()
         await imageRobot.run()

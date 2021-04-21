@@ -40,8 +40,9 @@ export class ImageRobot {
         this.stateRobot.save(this.content)
 
         await this.downloadAllImages()
-        await this.createAllSentenceImages()
-        await this.createYouTubeThumbnail()
+        await this.convertAllImages()
+        // await this.createAllSentenceImages()
+        // await this.createYouTubeThumbnail()
 
     }
 
@@ -68,6 +69,7 @@ export class ImageRobot {
 
     }
 
+    private successfulDownloadedImageIndexes: number[] = []
     private async downloadAllImages() {
 
         for (let i = 0; i < this.content.sentences.length; i++) {
@@ -82,6 +84,8 @@ export class ImageRobot {
 
                     await this.downloadAndSaveImage(imageURL, `${i}-original.png`)
                     console.log(`> ${i} ${j} Image downloaded.`)
+                    this.successfulDownloadedImageIndexes.push(i)
+                    break
 
                 } catch {
                     console.log(`> ${i} ${j} Error in image download.`)
@@ -107,17 +111,11 @@ export class ImageRobot {
 
         this.downloadedURLs.push(url)
 
-        this.convertAllImages()
-
     }
 
     private async convertAllImages() {
-        for (let i = 0; i < this.content.sentences.length; i++) {
-            try {
-                await this.convertImage(i)
-            } catch {
-
-            }
+        for (let i of this.successfulDownloadedImageIndexes) {
+            await this.convertImage(i)
         }
     }
 
@@ -161,12 +159,8 @@ export class ImageRobot {
     }
 
     private async createAllSentenceImages() {
-        for (let i = 0; i < this.content.sentences.length; i++) {
-            try {
-                await this.createSentenceImage(i, this.content.sentences[i].text)
-            } catch {
-
-            }
+        for (let i of this.successfulDownloadedImageIndexes) {
+            await this.createSentenceImage(i, this.content.sentences[i].text)
         }
     }
 
@@ -227,7 +221,7 @@ export class ImageRobot {
     private async createYouTubeThumbnail() {
         return new Promise<void>((resolve, reject) => {
             gm()
-                .in(fromRoot('./content/0-converted.png'))
+                .in(fromRoot(`./content/-${this.successfulDownloadedImageIndexes[0]}converted.png`))
                 .write(fromRoot('./content/youtube-thumbnail.jpg'), (error) => {
                     if (error) {
                         return reject(error)

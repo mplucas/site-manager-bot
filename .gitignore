@@ -2,5 +2,8 @@ node_modules
 credentials/*.ts
 credentials/*.json
 content.json
-content/*.ts
-content/*.json
+content/*.png
+content/*.jpg
+content/*.jpeg
+dist
+.vscode
