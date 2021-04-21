@@ -39,6 +39,10 @@ export class ImageRobot {
 
         this.stateRobot.save(this.content)
 
+        if (this.content.sentences.length == 0) {
+            throw new Error('No images fetched')
+        }
+
         await this.downloadAllImages()
 
         if (this.successfulDownloadedImageIndexes.length == 0) {
@@ -58,7 +62,7 @@ export class ImageRobot {
             cx: googleSearchAPI.searchEngineId,
             q: query,
             searchType: 'image',
-            num: 2
+            num: 5
         })
 
         if (response.data.items) {
@@ -119,7 +123,7 @@ export class ImageRobot {
     }
 
     private async convertAllImages() {
-        for (let i of this.successfulDownloadedImageIndexes) {
+        for (let i = 0; i < this.content.sentences.length; i++) {
             await this.convertImage(i)
         }
     }
@@ -164,7 +168,7 @@ export class ImageRobot {
     }
 
     private async createAllSentenceImages() {
-        for (let i of this.successfulDownloadedImageIndexes) {
+        for (let i = 0; i < this.content.sentences.length; i++) {
             await this.createSentenceImage(i, this.content.sentences[i].text)
         }
     }
