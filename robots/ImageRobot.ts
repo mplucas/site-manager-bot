@@ -3,6 +3,10 @@ import { StateRobot } from "./StateRobot";
 const google = require('googleapis').google
 const customSearch = google.customsearch('v1')
 import imageDownloader from 'image-downloader';
+import path from 'path';
+const rootPath = path.resolve(__dirname, '..')
+const fromRoot = (relPath: string) => path.resolve(rootPath, relPath)
+const gm = require('gm').subClass({ imageMagick: true })
 
 import { api } from "../credentials/google-search"
 
@@ -36,6 +40,8 @@ export class ImageRobot {
         this.stateRobot.save(this.content)
 
         await this.downloadAllImages()
+        await this.createAllSentenceImages()
+        await this.createYouTubeThumbnail()
 
     }
 
@@ -101,6 +107,136 @@ export class ImageRobot {
 
         this.downloadedURLs.push(url)
 
+        this.convertAllImages()
+
+    }
+
+    private async convertAllImages() {
+        for (let i = 0; i < this.content.sentences.length; i++) {
+            try {
+                await this.convertImage(i)
+            } catch {
+
+            }
+        }
+    }
+
+    private async convertImage(sentenceIndex) {
+        return new Promise<void>((resolve, reject) => {
+            const inputFile = fromRoot(`./content/${sentenceIndex}-original.png[0]`)
+            const outputFile = fromRoot(`./content/${sentenceIndex}-converted.png`)
+            const width = 1920
+            const height = 1080
+
+            gm()
+                .in(inputFile)
+                .out('(')
+                .out('-clone')
+                .out('0')
+                .out('-background', 'white')
+                .out('-blur', '0x9')
+                .out('-resize', `${width}x${height}^`)
+                .out(')')
+                .out('(')
+                .out('-clone')
+                .out('0')
+                .out('-background', 'white')
+                .out('-resize', `${width}x${height}`)
+                .out(')')
+                .out('-delete', '0')
+                .out('-gravity', 'center')
+                .out('-compose', 'over')
+                .out('-composite')
+                .out('-extent', `${width}x${height}`)
+                .write(outputFile, (error) => {
+                    if (error) {
+                        return reject(error)
+                    }
+
+                    console.log(`> [video-robot] Image converted: ${outputFile}`)
+                    resolve()
+                })
+
+        })
+    }
+
+    private async createAllSentenceImages() {
+        for (let i = 0; i < this.content.sentences.length; i++) {
+            try {
+                await this.createSentenceImage(i, this.content.sentences[i].text)
+            } catch {
+
+            }
+        }
+    }
+
+    private async createSentenceImage(sentenceIndex, sentenceText) {
+        return new Promise<void>((resolve, reject) => {
+            const outputFile = fromRoot(`./content/${sentenceIndex}-sentence.png`)
+
+            const templateSettings = {
+                0: {
+                    size: '1920x400',
+                    gravity: 'center'
+                },
+                1: {
+                    size: '1920x1080',
+                    gravity: 'center'
+                },
+                2: {
+                    size: '800x1080',
+                    gravity: 'west'
+                },
+                3: {
+                    size: '1920x400',
+                    gravity: 'center'
+                },
+                4: {
+                    size: '1920x1080',
+                    gravity: 'center'
+                },
+                5: {
+                    size: '800x1080',
+                    gravity: 'west'
+                },
+                6: {
+                    size: '1920x400',
+                    gravity: 'center'
+                }
+
+            }
+
+            gm()
+                .out('-size', templateSettings[sentenceIndex].size)
+                .out('-gravity', templateSettings[sentenceIndex].gravity)
+                .out('-background', 'transparent')
+                .out('-fill', 'white')
+                .out('-kerning', '-1')
+                .out(`caption:${sentenceText}`)
+                .write(outputFile, (error) => {
+                    if (error) {
+                        return reject(error)
+                    }
+
+                    console.log(`> [video-robot] Sentence created: ${outputFile}`)
+                    resolve()
+                })
+        })
+    }
+
+    private async createYouTubeThumbnail() {
+        return new Promise<void>((resolve, reject) => {
+            gm()
+                .in(fromRoot('./content/0-converted.png'))
+                .write(fromRoot('./content/youtube-thumbnail.jpg'), (error) => {
+                    if (error) {
+                        return reject(error)
+                    }
+
+                    console.log('> [video-robot] YouTube thumbnail created')
+                    resolve()
+                })
+        })
     }
 
 }
