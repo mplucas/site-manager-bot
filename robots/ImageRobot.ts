@@ -3,9 +3,6 @@ import { StateRobot } from "./StateRobot";
 const google = require('googleapis').google
 const customSearch = google.customsearch('v1')
 import imageDownloader from 'image-downloader';
-import path from 'path';
-const rootPath = path.resolve(__dirname, '..')
-const fromRoot = (relPath: string) => path.resolve(rootPath, relPath)
 const gm = require('gm').subClass({ imageMagick: true })
 
 import { api as googleSearchAPI } from "../credentials/google-search"
@@ -130,8 +127,8 @@ export class ImageRobot {
 
     private async convertImage(sentenceIndex) {
         return new Promise<void>((resolve, reject) => {
-            const inputFile = fromRoot(`./content/${sentenceIndex}-original.png[0]`)
-            const outputFile = fromRoot(`./content/${sentenceIndex}-converted.png`)
+            const inputFile = `./content/${sentenceIndex}-original.png[0]`
+            const outputFile = `./content/${sentenceIndex}-converted.png`
             const width = 1920
             const height = 1080
 
@@ -175,7 +172,7 @@ export class ImageRobot {
 
     private async createSentenceImage(sentenceIndex, sentenceText) {
         return new Promise<void>((resolve, reject) => {
-            const outputFile = fromRoot(`./content/${sentenceIndex}-sentence.png`)
+            const outputFile = `./content/${sentenceIndex}-sentence.png`
 
             const templateSettings = {
                 0: {
@@ -230,8 +227,8 @@ export class ImageRobot {
     private async createYouTubeThumbnail() {
         return new Promise<void>((resolve, reject) => {
             gm()
-                .in(fromRoot(`./content/${this.successfulDownloadedImageIndexes[0]}-converted.png`))
-                .write(fromRoot('./content/youtube-thumbnail.jpg'), (error) => {
+                .in(`./content/0-converted.png`)
+                .write('./content/youtube-thumbnail.jpg', (error) => {
                     if (error) {
                         return reject(error)
                     }
