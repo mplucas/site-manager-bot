@@ -7,3 +7,5 @@ content/*.jpg
 content/*.jpeg
 dist
 .vscode
+templates
+content/*.js

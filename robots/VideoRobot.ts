@@ -25,6 +25,7 @@ export class VideoRobot{
         await this.convertAllImages()
         await this.createAllSentenceImages()
         await this.createYouTubeThumbnail()
+        await this.createAfterEffectsScript()
 
     }
 
@@ -146,6 +147,10 @@ export class VideoRobot{
                     resolve()
                 })
         })
+    }
+
+    private async createAfterEffectsScript(){
+        this.stateRobot.saveScript(this.content)
     }
 
 }
