@@ -27,17 +27,7 @@ export class ImageRobot {
 
         console.log(`> [image-robot] Starting...`)
 
-        for (let i = 0; i < this.content.sentences.length; i++) {
-
-            const sentence = this.content.sentences[i];
-            const query = `${this.content.searchTerm} ${sentence.keywords[0]}`
-            console.log(`> [image-robot] Querying Google images with "${query}"`)
-            sentence.images = await this.fetchGoogleAndReturnImageLinks(query)
-            sentence.googleSearchQuery = query
-
-        }
-
-        this.stateRobot.save(this.content)
+        await this.fetchImagesOfAllSentences()
 
         if (this.content.sentences.length == 0) {
             throw new Error('No images fetched')
@@ -48,6 +38,22 @@ export class ImageRobot {
         if (this.successfulDownloadedImageIndexes.length == 0) {
             throw new Error('No images downloaded')
         }
+
+    }
+
+    private async fetchImagesOfAllSentences() {
+
+        for (let i = 0; i < this.content.sentences.length; i++) {
+
+            const sentence = this.content.sentences[i];
+            const query = i == 0 ? `${this.content.searchTerm}` : `${this.content.searchTerm} ${sentence.keywords[0]}`
+            console.log(`> [image-robot] Querying Google images with "${query}"`)
+            sentence.images = await this.fetchGoogleAndReturnImageLinks(query)
+            sentence.googleSearchQuery = query
+
+        }
+
+        this.stateRobot.save(this.content)
 
     }
 
