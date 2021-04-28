@@ -25,10 +25,13 @@ export class ImageRobot {
 
     public async run() {
 
+        console.log(`> [image-robot] Starting...`)
+
         for (let i = 0; i < this.content.sentences.length; i++) {
 
             const sentence = this.content.sentences[i];
             const query = `${this.content.searchTerm} ${sentence.keywords[0]}`
+            console.log(`> [image-robot] Querying Google images with "${query}"`)
             sentence.images = await this.fetchGoogleAndReturnImageLinks(query)
             sentence.googleSearchQuery = query
 
@@ -85,12 +88,12 @@ export class ImageRobot {
                 try {
 
                     await this.downloadAndSaveImage(imageURL, `${i}-original.png`)
-                    console.log(`> ${i} ${j} Image downloaded.`)
+                    console.log(`> [image-robot] ${i} ${j} Image downloaded.`)
                     this.successfulDownloadedImageIndexes.push(i)
                     break
 
                 } catch {
-                    console.log(`> ${i} ${j} Error in image download.`)
+                    console.log(`> [image-robot] ${i} ${j} Error in image download.`)
                 }
 
             }

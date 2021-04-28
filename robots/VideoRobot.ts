@@ -26,6 +26,8 @@ export class VideoRobot {
 
     public async run() {
 
+        console.log(`> [video-robot] Starting...`)
+
         await this.convertAllImages()
         await this.createAllSentenceImages()
         await this.createYouTubeThumbnail()

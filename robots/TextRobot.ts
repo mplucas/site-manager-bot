@@ -33,8 +33,11 @@ export class TextRobot {
 
     public async run() {
 
+        console.log('> [text-robot] Starting...')
         if (!this.content.sourceContentOriginal) {
             await this.fetchContentFromWikipedia()
+        } else {
+            console.log('> [text-robot] Not fetching from wikipedia beacuse Wiipedia robot already fetched...')
         }
 
         this.sanitizeContent()
@@ -47,12 +50,16 @@ export class TextRobot {
 
     private async fetchContentFromWikipedia() {
 
+        console.log('> [text-robot] Fetching from Wikipedia...')
+
         const algorithimiaAuthenticate = algorithmia(algorithmiaAPI.key)
         const wikipediaAlgorithim = algorithimiaAuthenticate.algo('web/WikipediaParser/0.1.2')
         const wikipediaResponse = await wikipediaAlgorithim.pipe({ articleName: this.content.searchTerm })
         const wikipediaContent = wikipediaResponse.get()
 
         this.content.sourceContentOriginal = wikipediaContent.content
+
+        console.log('> [text-robot] Fetching done!...')
 
     }
 
@@ -104,8 +111,12 @@ export class TextRobot {
 
     private async fetchKeywordsOfAllSentences() {
 
+        console.log('> [text-robot] Starting to fetch keywords from Watson')
+
         for (const sentence of this.content.sentences) {
+            console.log(`> [text-robot] Sentence: "${sentence.text}"`)
             sentence.keywords = await this.fetchWatsonAndReturnKeywords(sentence.text)
+            console.log(`> [text-robot] Keywords: "${sentence.keywords.join(', ')}"`)
         }
 
     }

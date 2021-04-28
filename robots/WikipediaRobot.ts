@@ -30,11 +30,11 @@ export class WikipediaRobot {
 
     public async run() {
 
-        console.log('Fetching from Wikipedia...')
+        console.log('> [wikipedia-robot] Starting...')
         await this.fetchFromWikipedia()
-        console.log('Searching content...')
+        console.log('> [wikipedia-robot] Searching content...')
         await this.getContent()
-        console.log('Building object to others Robots...')
+        console.log('> [wikipedia-robot] Building object to others Robots...')
         const algorithmiaLikeObject = this.buildAlgorithmiaLikeObject()
 
         this.content.sourceContentOriginal = algorithmiaLikeObject.content
@@ -42,6 +42,8 @@ export class WikipediaRobot {
     }
 
     private async fetchFromWikipedia() {
+
+        console.log('> [wikipedia-robot] Fetching from Wikipedia...')
 
         const res = await superAgent.get('https://en.wikipedia.org/w/api.php').query({
             'action': 'opensearch',
@@ -52,9 +54,9 @@ export class WikipediaRobot {
         })
 
         if (res.body[1].length == 0) {
-            console.log('Your search term don\'t return any result')
-            console.log('Tip: Search your therm in English or pre-search valid Words')
-            console.log('Exiting Program...')
+            console.log('> [wikipedia-robot] Your search term don\'t return any result')
+            console.log('> [wikipedia-robot] Tip: Search your therm in English or pre-search valid Words')
+            console.log('> [wikipedia-robot] Exiting Program...')
             process.exit()
         }
 
@@ -67,8 +69,8 @@ export class WikipediaRobot {
         let index = await chooseOneIn(sugestions)
 
         if (index == -1) {
-            console.log('You don\'t selected any key')
-            console.log('Exiting Program...')
+            console.log('> [wikipedia-robot] You don\'t selected any key')
+            console.log('> [wikipedia-robot] Exiting Program...')
             process.exit()
         }
 
@@ -76,6 +78,7 @@ export class WikipediaRobot {
 
         this.title = res.body[1][index]
 
+        console.log('> [wikipedia-robot] Fetching done!')
     }
 
     private async getContent() {
@@ -104,7 +107,7 @@ export class WikipediaRobot {
 
         } catch (Ex) {
             console.log('----------------------------')
-            console.log('Any Links in this search')
+            console.log('> [wikipedia-robot] Any Links in this search')
             console.log('----------------------------')
         }
 
@@ -114,7 +117,7 @@ export class WikipediaRobot {
             })
         } catch (Ex) {
             console.log('----------------------------')
-            console.log('Any Reference in this search')
+            console.log('> [wikipedia-robot] Any Reference in this search')
             console.log('----------------------------')
         }
 
