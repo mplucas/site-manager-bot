@@ -35,3 +35,26 @@ export const api = {
     "searchEngineId": "447c28d60d045149b"
 }
 ```
+
+## Youtube credentials
+
+File: `youtube.ts`
+
+```
+export const api = {
+    "web": {
+        "client_id": "53929984792-1dc1cc4ngermdmv3jcn5otcb59miqr0c.apps.googleusercontent.com",
+        "project_id": "content-maker-upload",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "Hl1VJilEGPtFeZZw_MY8P811",
+        "redirect_uris": [
+            "http://localhost:5000/oauth2callback"
+        ],
+        "javascript_origins": [
+            "http://localhost:5000"
+        ]
+    }
+}
+```

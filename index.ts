@@ -3,6 +3,7 @@ import { StateRobot } from './robots/StateRobot'
 import { TextRobot } from './robots/TextRobot'
 import { VideoRobot } from './robots/VideoRobot'
 import { WikipediaRobot } from './robots/WikipediaRobot'
+import { YoutubeRobot } from './robots/YoutubeRobot'
 import { UserInput } from './utils/UserInput'
 
 class App {
@@ -11,21 +12,24 @@ class App {
 
         try {
 
-            const userInput = new UserInput()
-            await userInput.get()
-            
+            // const userInput = new UserInput()
+            // await userInput.get()
 
-            const wikipediaRobot = new WikipediaRobot()
-            await wikipediaRobot.run()
 
-            const textRobot = new TextRobot()
-            await textRobot.run()
+            // const wikipediaRobot = new WikipediaRobot()
+            // await wikipediaRobot.run()
 
-            const imageRobot = new ImageRobot()
-            await imageRobot.run()
+            // const textRobot = new TextRobot()
+            // await textRobot.run()
 
-            const videoRobot = new VideoRobot()
-            await videoRobot.run()
+            // const imageRobot = new ImageRobot()
+            // await imageRobot.run()
+
+            // const videoRobot = new VideoRobot()
+            // await videoRobot.run()
+
+            const youtubeRobot = new YoutubeRobot()
+            await youtubeRobot.run()
 
             const content = (new StateRobot()).load()
             console.dir(content, { depth: null })

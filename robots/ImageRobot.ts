@@ -1,4 +1,4 @@
-import { Content, Sentence } from "../interfaces";
+import { Content } from "../interfaces";
 import { StateRobot } from "./StateRobot";
 import imageDownloader from 'image-downloader';
 
